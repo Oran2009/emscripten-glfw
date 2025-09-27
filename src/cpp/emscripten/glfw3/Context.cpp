@@ -181,7 +181,7 @@ void Context::addOrRemoveEventListeners(bool iAdd)
         if(fSingleWindow)
           fSingleWindow->onGlobalMouseMove(iEvent);
 #endif
-        return true;
+        return false;
       })
       .add(emscripten_set_mousemove_callback_on_thread);
 

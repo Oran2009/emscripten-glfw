@@ -4,11 +4,15 @@ Introduction
 This project is an Emscripten port of GLFW written in C++ for the web/wasm platform. The currently supported
 GLFW API is 3.4.
 
-[![emscripten - 4.0.14](https://img.shields.io/badge/emscripten-4.0.14-blue)](https://emscripten.org)
-[![contrib.glfw3 - 3.4.0.20250824](https://img.shields.io/badge/contrib.glfw3-3.4.0.20250824-blue)](https://github.com/pongasoft/emscripten-glfw/releases/latest)
+[![emscripten - TBD](https://img.shields.io/badge/emscripten-TBD-blue)](https://emscripten.org)
+[![contrib.glfw3 - 3.4.0.20250927](https://img.shields.io/badge/contrib.glfw3-3.4.0.20250927-blue)](https://github.com/pongasoft/emscripten-glfw/releases/latest)
 [![GLFW - 3.4.0](https://img.shields.io/badge/GLFW-3.4.0-blue)](https://www.glfw.org/)
 [![License](https://img.shields.io/badge/License-Apache%20License%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![Compiles](https://github.com/pongasoft/emscripten-glfw/actions/workflows/main.yml/badge.svg)
+
+[![emscripten - 4.0.14](https://img.shields.io/badge/emscripten-4.0.14-blue)](https://emscripten.org)
+[![contrib.glfw3 - 3.4.0.20250824](https://img.shields.io/badge/contrib.glfw3-3.4.0.20250824-blue)](https://github.com/pongasoft/emscripten-glfw/releases/latest)
+[![GLFW - 3.4.0](https://img.shields.io/badge/GLFW-3.4.0-blue)](https://www.glfw.org/)
 
 Goal
 ----
@@ -209,6 +213,7 @@ emcc --use-port=contrib.glfw3:disableWarning=true:disableMultiWindow=true main.c
 > #### Note about availability in Emscripten
 > | Emscripten | this port      |
 > |------------|----------------|
+> | TBD        | 3.4.0.20250927 |
 > | 4.0.14     | 3.4.0.20250824 |
 > | 4.0.11     | 3.4.0.20250607 |
 > | 4.0.5      | 3.4.0.20250305 |
@@ -244,6 +249,10 @@ Check the [Building](docs/Building.md) page for details on how to build this pro
 
 Release Notes
 -------------
+#### 3.4.0.20250927 - 2025-09-27 | TBD
+
+- Fixed [#23](https://github.com/pongasoft/emscripten-glfw/issues/23): Calling `glfwInit()` breaks various input elements
+
 #### 3.4.0.20250824 - 2025-08-24 | Emscripten 4.0.14
 
 - The code has been optimized for size

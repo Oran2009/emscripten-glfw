@@ -795,10 +795,12 @@ bool Window::onMouseButtonUp(int iGLFWButton)
 
       if(fMouse.fButtonCallback)
         fMouse.fButtonCallback(asOpaquePtr(), fMouse.fLastButton, fMouse.fLastButtonState, fKeyboard.computeModifierBits());
+
+      return true;
     }
   }
 
-  return true;
+  return false;
 }
 
 //------------------------------------------------------------------------

@@ -40,23 +40,22 @@ struct Event
   enum class Type : int
   {
     exit = 1,
-    toggleShow,
-    zoomIn,
-    zoomOut,
-    zoomReset,
-    opacity30,
-    opacity60,
-    opacity100,
-    close,
-    toggleHiDPIAware,
-    toggleResizable,
-    toggleSizeLimits,
-    toggleAspectRatio,
-    updateTitle,
+    toggleShow = 2,
+    zoomIn = 3,
+    zoomOut = 4,
+    zoomReset = 5,
+    opacity = 6,
+    close = 7,
+    toggleHiDPIAware = 8,
+    toggleResizable = 9,
+    toggleSizeLimits = 10,
+    toggleAspectRatio = 11,
+    updateTitle = 12,
   };
 
   Type fType;
   GLFWwindow *fWindow{};
+  float fData{};
 };
 
 //------------------------------------------------------------------------
@@ -66,15 +65,17 @@ std::optional<Event> popEvent()
 {
   int type{};
   GLFWwindow *w;
+  float data;
   EM_ASM({
            if(Module['hasEvents']()) {
              const event = Module['popEvent']();
              setValue($0, event.type, 'i32');
              setValue($1, event.canvas, '*');
+             setValue($2, event.data, 'float');
            }
-         }, &type, &w);
+         }, &type, &w, &data);
   if(type > 0)
-    return Event{static_cast<Event::Type>(type), w};
+    return Event{static_cast<Event::Type>(type), w, data};
   else
     return std::nullopt;
 }
@@ -101,9 +102,7 @@ bool handleEvents()
       case Event::Type::zoomIn: if(triangle) triangle->zoomIn(); break;
       case Event::Type::zoomOut: if(triangle) triangle->zoomOut(); break;
       case Event::Type::zoomReset: if(triangle) triangle->zoomReset(); break;
-      case Event::Type::opacity30: if(triangle) triangle->setOpacity(0.3f); break;
-      case Event::Type::opacity60: if(triangle) triangle->setOpacity(0.6f); break;
-      case Event::Type::opacity100: if(triangle) triangle->setOpacity(1.0f); break;
+      case Event::Type::opacity: if(triangle) triangle->setOpacity(event->fData / 100.0f); break;
       case Event::Type::close: if(triangle) triangle->close(); break;
       case Event::Type::toggleHiDPIAware: if(triangle) triangle->toggleHiDPIAware(); break;
       case Event::Type::toggleResizable: if(triangle) triangle->toggleResizable(); break;
@@ -197,6 +196,7 @@ int main()
       glfwTerminate();
       return -1;
     }
+    setHtmlValue("input.canvas1.opacity", std::to_string(static_cast<int>(glfwGetWindowOpacity(window1) * 100.0f)));
   }
 
   GLFWwindow *window2{};
@@ -212,6 +212,7 @@ int main()
       glfwTerminate();
       return -1;
     }
+    setHtmlValue("input.canvas2.opacity", std::to_string(static_cast<int>(glfwGetWindowOpacity(window2) * 100.0f)));
   }
 
   if(window1)

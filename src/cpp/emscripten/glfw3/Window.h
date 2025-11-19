@@ -159,6 +159,7 @@ public:
   // OpenGL
   bool createGLContext();
   void makeGLContextCurrent() const;
+  void detachGLContext() const;
   constexpr bool hasGLContext() const { return fWebGLContextHandle != 0; }
 
   // Canvas

@@ -523,6 +523,15 @@ void Window::makeGLContextCurrent() const
 }
 
 //------------------------------------------------------------------------
+// Window::detachGLContext
+//------------------------------------------------------------------------
+void Window::detachGLContext() const
+{
+  if(emscripten_webgl_make_context_current(0) != EMSCRIPTEN_RESULT_SUCCESS)
+    kErrorHandler.logError(GLFW_PLATFORM_ERROR, "Cannot detach current GL context for [%s]", getCanvasSelector());
+}
+
+//------------------------------------------------------------------------
 // Window::getContentScale
 //------------------------------------------------------------------------
 void Window::getContentScale(float *iXScale, float *iYScale) const

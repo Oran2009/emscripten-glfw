@@ -311,6 +311,8 @@ Triangle::~Triangle()
     glfwDestroyCursor(cursor);
   fCursors.clear();
   glfwSetWindowUserPointer(fWindow, nullptr);
+  if(glfwGetCurrentContext() == fWindow)
+    glfwMakeContextCurrent(nullptr);
   glfwDestroyWindow(fWindow);
 }
 

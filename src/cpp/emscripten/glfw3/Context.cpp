@@ -855,12 +855,24 @@ void Context::setNextWindowCanvasSelector(char const *iCanvasSelector)
 //------------------------------------------------------------------------
 void Context::makeContextCurrent(GLFWwindow *iWindow)
 {
-  auto window = getWindow(iWindow);
-  if(window)
+  if(iWindow)
   {
-    fCurrentWindow = window;
-    fCurrentWindowOpaquePtr = iWindow;
-    fCurrentWindow->makeGLContextCurrent();
+    auto window = getWindow(iWindow);
+    if(window)
+    {
+      fCurrentWindow = window;
+      fCurrentWindowOpaquePtr = iWindow;
+      fCurrentWindow->makeGLContextCurrent();
+    }
+  }
+  else
+  {
+    if(fCurrentWindow)
+    {
+      fCurrentWindow->detachGLContext();
+      fCurrentWindow = nullptr;
+      fCurrentWindowOpaquePtr = nullptr;
+    }
   }
 }
 

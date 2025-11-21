@@ -863,7 +863,7 @@ void Window::addOrRemoveEventListeners(bool iAdd)
       .listener([this](int iEventType, const EmscriptenMouseEvent *iEvent) {
         return onMouseButtonDown(emscriptenToGLFWButton(iEvent->button));
       })
-      .add(emscripten_set_mousedown_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_MOUSEDOWN, emscripten_set_mousedown_callback_on_thread);
 
     // fOnMouseEnter
     fOnMouseEnter
@@ -877,7 +877,7 @@ void Window::addOrRemoveEventListeners(bool iAdd)
         }
         return false;
       })
-      .add(emscripten_set_mouseenter_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_MOUSEENTER, emscripten_set_mouseenter_callback_on_thread);
 
     // fOnMouseLeave
     fOnMouseLeave
@@ -891,7 +891,7 @@ void Window::addOrRemoveEventListeners(bool iAdd)
         }
         return false;
       })
-      .add(emscripten_set_mouseleave_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_MOUSELEAVE, emscripten_set_mouseleave_callback_on_thread);
 
     // fOnMouseWheel
     fOnMouseWheel
@@ -913,7 +913,7 @@ void Window::addOrRemoveEventListeners(bool iAdd)
         }
         return false;
       })
-      .add(emscripten_set_wheel_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_WHEEL, emscripten_set_wheel_callback_on_thread);
 
     // keyboard
     // note: keyboard events are handled in context because target is "window"
@@ -922,13 +922,13 @@ void Window::addOrRemoveEventListeners(bool iAdd)
     fOnFocusChange
       .target(selector)
       .listener([this](int eventType, const EmscriptenFocusEvent *iEvent) { return onFocusChange(true); })
-      .add(emscripten_set_focus_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_FOCUS, emscripten_set_focus_callback_on_thread);
 
     // fOnBlurChange
     fOnBlurChange
       .target(selector)
       .listener([this](int eventType, const EmscriptenFocusEvent *iEvent) { return onFocusChange(false); })
-      .add(emscripten_set_blur_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_BLUR, emscripten_set_blur_callback_on_thread);
 
     // fOnTouchStart
     fOnTouchStart
@@ -936,7 +936,7 @@ void Window::addOrRemoveEventListeners(bool iAdd)
       .listener([this](int iEventType, const EmscriptenTouchEvent *iEvent) {
         return fContext->onTouchStart(asOpaquePtr(), iEvent);
       })
-      .add(emscripten_set_touchstart_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_TOUCHSTART, emscripten_set_touchstart_callback_on_thread);
   }
   else
   {

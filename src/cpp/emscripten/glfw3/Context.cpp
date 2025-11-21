@@ -183,7 +183,7 @@ void Context::addOrRemoveEventListeners(bool iAdd)
 #endif
         return false;
       })
-      .add(emscripten_set_mousemove_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_MOUSEMOVE, emscripten_set_mousemove_callback_on_thread);
 
     // fOnMouseButtonUp
     fOnMouseButtonUp
@@ -198,7 +198,7 @@ void Context::addOrRemoveEventListeners(bool iAdd)
         return fSingleWindow && fSingleWindow->onMouseButtonUp(iEvent);
 #endif
       })
-      .add(emscripten_set_mouseup_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_MOUSEUP, emscripten_set_mouseup_callback_on_thread);
 
     // fOnFullscreenChange
     fOnFullscreenChange
@@ -206,7 +206,7 @@ void Context::addOrRemoveEventListeners(bool iAdd)
       .listener([this](int iEventType, EmscriptenFullscreenChangeEvent const *iEvent) {
         return toCBool(iEvent->isFullscreen) ? onEnterFullscreen(iEvent) : onExitFullscreen();
       })
-      .add(emscripten_set_fullscreenchange_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_FULLSCREENCHANGE, emscripten_set_fullscreenchange_callback_on_thread);
 
     // fOnPointerLockChange
     fOnPointerLockChange
@@ -214,7 +214,7 @@ void Context::addOrRemoveEventListeners(bool iAdd)
       .listener([this](int iEventType, EmscriptenPointerlockChangeEvent const *iEvent) {
         return toCBool(iEvent->isActive) ? onPointerLock(iEvent) : onPointerUnlock();
       })
-      .add(emscripten_set_pointerlockchange_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_POINTERLOCKCHANGE, emscripten_set_pointerlockchange_callback_on_thread);
 
     // fOnPointerLockError
     fOnPointerLockError
@@ -225,41 +225,43 @@ void Context::addOrRemoveEventListeners(bool iAdd)
         fPointerLockRequest = std::nullopt;
         return true;
       })
-      .add(emscripten_set_pointerlockerror_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_POINTERLOCKERROR, emscripten_set_pointerlockerror_callback_on_thread);
 
     // fOnTouchStart
     fOnTouchStart
       .target(EMSCRIPTEN_EVENT_TARGET_DOCUMENT)
       .listener([this](int iEventType, const EmscriptenTouchEvent *iEvent) { return onTouchStart(nullptr, iEvent); })
-      .add(emscripten_set_touchstart_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_TOUCHSTART, emscripten_set_touchstart_callback_on_thread);
 
     // fOnTouchMove
     fOnTouchMove
       .target(EMSCRIPTEN_EVENT_TARGET_DOCUMENT)
       .listener([this](int iEventType, const EmscriptenTouchEvent *iEvent) { return onTouchMove(iEvent); })
-      .add(emscripten_set_touchmove_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_TOUCHMOVE, emscripten_set_touchmove_callback_on_thread);
 
     // fOnTouchCancel
     fOnTouchCancel
       .target(EMSCRIPTEN_EVENT_TARGET_DOCUMENT)
       .listener([this](int iEventType, const EmscriptenTouchEvent *iEvent) { return onTouchEnd(iEvent); })
-      .add(emscripten_set_touchcancel_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_TOUCHCANCEL, emscripten_set_touchcancel_callback_on_thread);
 
     // fOnTouchEnd
     fOnTouchEnd
       .target(EMSCRIPTEN_EVENT_TARGET_DOCUMENT)
       .listener([this](int iEventType, const EmscriptenTouchEvent *iEvent) { return onTouchEnd(iEvent); })
-      .add(emscripten_set_touchend_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_TOUCHEND, emscripten_set_touchend_callback_on_thread);
 
     // gamepad/joystick
 #ifndef EMSCRIPTEN_GLFW3_DISABLE_JOYSTICK
     fOnGamepadConnected
+      .target(EMSCRIPTEN_EVENT_TARGET_WINDOW)
       .listener([this](int iEventType, EmscriptenGamepadEvent const *iEvent) { return onGamepadConnectionChange(iEvent); })
-      .add(emscripten_set_gamepadconnected_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_GAMEPADCONNECTED, emscripten_set_gamepadconnected_callback_on_thread);
 
     fOnGamepadDisconnected
+      .target(EMSCRIPTEN_EVENT_TARGET_WINDOW)
       .listener([this](int iEventType, EmscriptenGamepadEvent const *iEvent) { return onGamepadConnectionChange(iEvent); })
-      .add(emscripten_set_gamepaddisconnected_callback_on_thread);
+      .add(EMSCRIPTEN_EVENT_GAMEPADDISCONNECTED, emscripten_set_gamepaddisconnected_callback_on_thread);
 #endif
   }
   else

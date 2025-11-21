@@ -43,24 +43,25 @@ void EventListenerBase::setTarget(char const *iTarget)
 }
 
 //------------------------------------------------------------------------
-// EventListenerBase::setCallbackFunction
+// EventListenerBase::addCallback
 //------------------------------------------------------------------------
-bool EventListenerBase::setCallbackFunction(callback_function_t iFunction)
+bool EventListenerBase::addCallback(int iEventType, callback_setter_function_t const &iCallback)
 {
   remove();
 
-  fCallbackFunction = std::move(iFunction);
+  fEventTypeId = iEventType;
 
-  auto error = fCallbackFunction(true);
+  auto error = iCallback();
 
   if(error != EMSCRIPTEN_RESULT_SUCCESS)
   {
     ErrorHandler::instance().logError(GLFW_PLATFORM_ERROR, "Error [%d] while registering listener for [%s]",
                                       error,
                                       fTarget.c_str());
-    fCallbackFunction = {};
     return false;
   }
+
+  fAdded = true;
 
   return true;
 }
@@ -70,15 +71,19 @@ bool EventListenerBase::setCallbackFunction(callback_function_t iFunction)
 //------------------------------------------------------------------------
 void EventListenerBase::remove()
 {
-  if(fCallbackFunction)
+  if(fAdded)
   {
-    auto error = fCallbackFunction(false);
+    auto error = emscripten_html5_remove_event_listener(fSpecialTarget ? fSpecialTarget : fTarget.c_str(),
+                                                        this,
+                                                        fEventTypeId,
+                                                        getGenericCallback());
     if(error != EMSCRIPTEN_RESULT_SUCCESS)
     {
       ErrorHandler::instance().logError(GLFW_PLATFORM_ERROR, "Error [%d] while removing listener for [%s]",
                                         error,
                                         fTarget.c_str());
     }
+    fAdded = false;
   }
 }
 

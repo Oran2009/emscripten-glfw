@@ -47,21 +47,22 @@ public:
 protected:
   /**
    * Wraps the call to an Emscripten setting callback function (ex: emscripten_set_mousemove_callback_on_thread)
-   * in a generic fashion. The `bool` parameter is `true` for "add", `false` for "remove"
-   */
-  using callback_function_t = std::function<int(bool)>;
+   * in a generic fashion. */
+  using callback_setter_function_t = std::function<int()>;
 
 protected:
   void setTarget(char const *iTarget);
-  bool setCallbackFunction(callback_function_t iFunction);
+  bool addCallback(int iEventType, callback_setter_function_t const &iCallback);
+  virtual void *getGenericCallback() const = 0;
 
 protected:
   char const *fSpecialTarget{};
   std::string fTarget{};
+  int fEventTypeId{};
   pthread_t fThread{EM_CALLBACK_THREAD_CONTEXT_CALLING_THREAD};
 
 private:
-  callback_function_t fCallbackFunction{};
+  bool fAdded{};
 };
 
 template<typename E>
@@ -75,10 +76,13 @@ public:
   inline EventListener &target(char const *iTarget) { setTarget(iTarget); return *this; }
   inline EventListener &listener(event_listener_t v) { fEventListener = std::move(v); return *this; }
 
-  bool add(EmscriptenCallbackFunction<E> iFunction);
-  bool add(EmscriptenCallbackFunction2<E> iFunction);
+  bool add(int iEventType, EmscriptenCallbackFunction<E> iFunction);
+  bool add(int iEventType, EmscriptenCallbackFunction2<E> iFunction);
 
   bool invoke(int iEventType, E const *iEvent) { if(fEventListener) return fEventListener(iEventType, iEvent); else return false; }
+
+protected:
+  void *getGenericCallback() const override;
 
 private:
   event_listener_t fEventListener{};
@@ -95,17 +99,27 @@ bool EventListenerCallback(int iEventType, E const *iEvent, void *iUserData)
   return cb->invoke(iEventType, iEvent);
 }
 
+
+//------------------------------------------------------------------------
+// EventListenerBase::getGenericCallback
+//------------------------------------------------------------------------
+template<typename E>
+void *EventListener<E>::getGenericCallback() const
+{
+  return reinterpret_cast<void *>(EventListenerCallback<E>);
+}
+
 //------------------------------------------------------------------------
 // EventListener<E>::add
 //------------------------------------------------------------------------
 template<typename E>
-bool EventListener<E>::add(EmscriptenCallbackFunction<E> iFunction)
+bool EventListener<E>::add(int iEventType, EmscriptenCallbackFunction<E> iFunction)
 {
-  return setCallbackFunction([iFunction, this](bool iAdd) {
+  return addCallback(iEventType, [iFunction, this]() {
     return iFunction(fSpecialTarget ? fSpecialTarget : fTarget.c_str(),
                      this,
                      EM_FALSE,
-                     iAdd ? EventListenerCallback<E> : nullptr,
+                     EventListenerCallback<E>,
                      fThread);
   });
 }
@@ -114,12 +128,12 @@ bool EventListener<E>::add(EmscriptenCallbackFunction<E> iFunction)
 // EventListener<E>::add
 //------------------------------------------------------------------------
 template<typename E>
-bool EventListener<E>::add(EmscriptenCallbackFunction2<E> iFunction)
+bool EventListener<E>::add(int iEventType, EmscriptenCallbackFunction2<E> iFunction)
 {
-  return setCallbackFunction([iFunction, this](bool iAdd) {
+  return addCallback(iEventType, [iFunction, this]() {
     return iFunction(this,
                      EM_FALSE,
-                     iAdd ? EventListenerCallback<E> : nullptr,
+                     EventListenerCallback<E>,
                      fThread);
   });
 }

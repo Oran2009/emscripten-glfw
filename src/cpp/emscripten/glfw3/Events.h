@@ -27,15 +27,15 @@ namespace emscripten::glfw3 {
 
 //! EmscriptenEventCallback
 template<typename E>
-using EmscriptenEventCallback = EM_BOOL (*)(int, E const *, void *);
+using EmscriptenEventCallback = bool (*)(int, E const *, void *);
 
 //! EmscriptenCallbackFunction
 template<typename E>
-using EmscriptenCallbackFunction = EMSCRIPTEN_RESULT (*)(const char *, void *, EM_BOOL, EmscriptenEventCallback<E>, pthread_t);
+using EmscriptenCallbackFunction = EMSCRIPTEN_RESULT (*)(const char *, void *, bool, EmscriptenEventCallback<E>, pthread_t);
 
 //! EmscriptenCallbackFunction2 (implicit target)
 template<typename E>
-using EmscriptenCallbackFunction2 = EMSCRIPTEN_RESULT (*)(void *, EM_BOOL, EmscriptenEventCallback<E>, pthread_t);
+using EmscriptenCallbackFunction2 = EMSCRIPTEN_RESULT (*)(void *, bool, EmscriptenEventCallback<E>, pthread_t);
 
 class EventListenerBase
 {

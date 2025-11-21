@@ -829,7 +829,7 @@ void emscripten_glfw_set_next_window_canvas_selector(char const *canvasSelector)
 //------------------------------------------------------------------------
 // emscripten_glfw_is_window_fullscreen
 //------------------------------------------------------------------------
-EM_BOOL emscripten_glfw_is_window_fullscreen(GLFWwindow* window)
+bool emscripten_glfw_is_window_fullscreen(GLFWwindow* window)
 {
   return emscripten::glfw3::IsWindowFullscreen(window);
 }
@@ -837,7 +837,7 @@ EM_BOOL emscripten_glfw_is_window_fullscreen(GLFWwindow* window)
 //------------------------------------------------------------------------
 // emscripten_glfw_request_fullscreen
 //------------------------------------------------------------------------
-int emscripten_glfw_request_fullscreen(GLFWwindow *window, EM_BOOL lockPointer, EM_BOOL resizeCanvas)
+int emscripten_glfw_request_fullscreen(GLFWwindow *window, bool lockPointer, bool resizeCanvas)
 {
   return emscripten::glfw3::RequestFullscreen(window, lockPointer, resizeCanvas);
 }
@@ -1300,7 +1300,7 @@ void emscripten_glfw_open_url(char const *url, char const *target)
 //------------------------------------------------------------------------
 // emscripten_glfw_is_runtime_platform_apple
 //------------------------------------------------------------------------
-EM_BOOL emscripten_glfw_is_runtime_platform_apple()
+bool emscripten_glfw_is_runtime_platform_apple()
 {
   return emscripten::glfw3::IsRuntimePlatformApple();
 }

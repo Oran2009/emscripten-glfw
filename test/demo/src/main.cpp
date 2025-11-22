@@ -147,6 +147,30 @@ bool iter()
 }
 
 //------------------------------------------------------------------------
+// debugEventHandlers
+//------------------------------------------------------------------------
+void debugEventHandlers(std::string_view iMessage)
+{
+  EM_ASM({
+           const message = UTF8ToString($0);
+           console.log(`${message} | Event Handlers = ${JSEvents.eventHandlers.length}`);
+         },
+         iMessage.data());
+}
+
+//------------------------------------------------------------------------
+// applicationMouseMoveCallback
+//------------------------------------------------------------------------
+static bool applicationMouseMoveCallback(int eventType, const EmscriptenMouseEvent *mouseEvent, void *userData)
+{
+  static long count = 0;
+  count++;
+  if(count % 500 == 0)
+    printf("applicationMouseMoveCallback [%ld]\n", count);
+  return false;
+}
+
+//------------------------------------------------------------------------
 // loop
 //------------------------------------------------------------------------
 void loop()
@@ -155,6 +179,9 @@ void loop()
   {
     kTriangles.clear();
     glfwTerminate();
+    debugEventHandlers("After glfwTerminate()");
+    emscripten_html5_remove_event_listener(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, EMSCRIPTEN_EVENT_MOUSEMOVE, reinterpret_cast<void *>(applicationMouseMoveCallback));
+    debugEventHandlers("After removing application event listener");
     emscripten_cancel_main_loop();
   }
 }
@@ -168,8 +195,12 @@ int main()
 
   glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_EMSCRIPTEN);
 
+  debugEventHandlers("Before glfwInit()");
+
   if(!glfwInit())
     return -1;
+
+  debugEventHandlers("After glfwInit()");
 
   printf("GLFW: %s | Platform: 0x%x\n", glfwGetVersionString(), glfwGetPlatform());
   printf("emscripten: v%d.%d.%d\n", __EMSCRIPTEN_major__, __EMSCRIPTEN_minor__, __EMSCRIPTEN_tiny__);
@@ -197,6 +228,7 @@ int main()
       return -1;
     }
     setHtmlValue("input.canvas1.opacity", std::to_string(static_cast<int>(glfwGetWindowOpacity(window1) * 100.0f)));
+    debugEventHandlers("After glfwCreateWindow(window1)");
   }
 
   GLFWwindow *window2{};
@@ -213,6 +245,7 @@ int main()
       return -1;
     }
     setHtmlValue("input.canvas2.opacity", std::to_string(static_cast<int>(glfwGetWindowOpacity(window2) * 100.0f)));
+    debugEventHandlers("After glfwCreateWindow(window2)");
   }
 
   if(window1)
@@ -253,6 +286,12 @@ int main()
   emscripten::glfw3::AddBrowserKeyCallback([](GLFWwindow* window, int key, int scancode, int action, int mods) {
     return mods == 0 && action == GLFW_PRESS && key == GLFW_KEY_F12;
   });
+
+  // Setting a callback that we know the library is also setting to make sure that when the library terminates
+  // it does not remove the callbacks set by the application
+  emscripten_set_mousemove_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, nullptr, false, applicationMouseMoveCallback);
+
+  debugEventHandlers("After adding application event listener");
 
   emscripten_set_main_loop(loop, 0, false);
 }

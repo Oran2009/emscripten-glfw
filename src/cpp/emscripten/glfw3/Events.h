@@ -118,7 +118,7 @@ bool EventListener<E>::add(int iEventType, EmscriptenCallbackFunction<E> iFuncti
   return addCallback(iEventType, [iFunction, this]() {
     return iFunction(fSpecialTarget ? fSpecialTarget : fTarget.c_str(),
                      this,
-                     EM_FALSE,
+                     false,
                      EventListenerCallback<E>,
                      fThread);
   });
@@ -132,7 +132,7 @@ bool EventListener<E>::add(int iEventType, EmscriptenCallbackFunction2<E> iFunct
 {
   return addCallback(iEventType, [iFunction, this]() {
     return iFunction(this,
-                     EM_FALSE,
+                     false,
                      EventListenerCallback<E>,
                      fThread);
   });

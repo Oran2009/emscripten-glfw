@@ -103,6 +103,8 @@ static auto kGLFWCustomCursorImage = []{
   return image;
 }();
 
+void debugEventHandlers(std::string_view iMessage);
+
 //------------------------------------------------------------------------
 // Triangle::Triangle
 //------------------------------------------------------------------------
@@ -314,6 +316,7 @@ Triangle::~Triangle()
   if(glfwGetCurrentContext() == fWindow)
     glfwMakeContextCurrent(nullptr);
   glfwDestroyWindow(fWindow);
+  debugEventHandlers(std::string("After glfwDestroyWindow(") + fName + ")");
 }
 
 //------------------------------------------------------------------------

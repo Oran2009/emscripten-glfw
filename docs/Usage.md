@@ -212,7 +212,11 @@ This ensures that the `requestAnimationFrame` mechanism of the browser is used
 > resized. When the canvas gets resized, the browser paints it black, which is why the "render frame" section
 > needs to re-render the content (using the new size).
 
-
+> [!Warning]
+> This library sets various (JavaScript) event handlers on various HTML elements (`document`, `window` and `canvas`).
+> It uses `emscripten_html5_remove_event_listener` to remove them when necessary in order not to interfere with the
+> client code using the library. The client code should also use `emscripten_html5_remove_event_listener` to remove
+> its own event handlers in order not to interfere with the proper functioning of the library.
 
 ## Fullscreen support
 

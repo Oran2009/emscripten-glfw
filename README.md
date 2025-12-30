@@ -5,7 +5,7 @@ This project is an Emscripten port of GLFW written in C++ for the web/wasm platf
 GLFW API is 3.4.
 
 [![emscripten - TBD](https://img.shields.io/badge/emscripten-TBD-blue)](https://emscripten.org)
-[![contrib.glfw3 - 3.4.0.20251217](https://img.shields.io/badge/contrib.glfw3-3.4.0.20251217-blue)](https://github.com/pongasoft/emscripten-glfw/releases/latest)
+[![contrib.glfw3 - 3.4.0.20251230](https://img.shields.io/badge/contrib.glfw3-3.4.0.20251230-blue)](https://github.com/pongasoft/emscripten-glfw/releases/latest)
 [![GLFW - 3.4.0](https://img.shields.io/badge/GLFW-3.4.0-blue)](https://www.glfw.org/)
 [![License](https://img.shields.io/badge/License-Apache%20License%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![Compiles](https://github.com/pongasoft/emscripten-glfw/actions/workflows/main.yml/badge.svg)
@@ -213,6 +213,7 @@ emcc --use-port=contrib.glfw3:disableWarning=true:disableMultiWindow=true main.c
 > #### Note about availability in Emscripten
 > | Emscripten | this port      |
 > |------------|----------------|
+> | TBD        | 3.4.0.20251230 |
 > | TBD        | 3.4.0.20251217 |
 > | 4.0.16     | 3.4.0.20250927 |
 > | 4.0.14     | 3.4.0.20250824 |
@@ -250,6 +251,13 @@ Check the [Building](docs/Building.md) page for details on how to build this pro
 
 Release Notes
 -------------
+#### 3.4.0.20251230 - 2025-12-30 | Emscripten TBD
+
+- Fixed [#26](https://github.com/pongasoft/emscripten-glfw/issues/26): 
+  _Cursor position set to delta movement instead of virtual position on pointer lock_
+  (thanks to [mrizaln](https://github.com/mrizaln) for reporting and providing the fix)
+
+
 #### 3.4.0.20251217 - 2025-12-17 | Emscripten TBD
 
 - Fixed [#24](https://github.com/pongasoft/emscripten-glfw/issues/24): `glfwMakeContextCurrent` non-compliance

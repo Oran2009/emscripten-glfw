@@ -378,6 +378,8 @@ void Window::onGlobalMouseMove(EmscriptenMouseEvent const *iEvent)
     // following SDL implementation to not lose sub-pixel motion
     fMouse.fCursorLockResidual.x -= cursorPos.x;
     fMouse.fCursorLockResidual.y -= cursorPos.y;
+    cursorPos.x += fMouse.fCursorPos.x;
+    cursorPos.y += fMouse.fCursorPos.y;
     setCursorPos(cursorPos);
   }
   else
@@ -703,7 +705,6 @@ void Window::onPointerLock()
   fMouse.fCursorLockResidual = {};
   fMouse.fCursorPosBeforePointerLock = fMouse.fCursorPos;
   fMouse.fCursorMode = GLFW_CURSOR_DISABLED;
-  setCursorPos(Vec2<double>{});
 }
 
 //------------------------------------------------------------------------

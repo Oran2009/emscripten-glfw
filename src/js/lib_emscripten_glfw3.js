@@ -43,7 +43,7 @@ let emscripten_glfw3_impl = {
         {{{ makeDynCall('vp', 'GLFW3.fScaleChangeCallback') }}}(GLFW3.fContext);
       }
 
-      // Re-register MQL with current DPR so subsequent zoom changes are detected.
+      // Re-register MQL with current DPR so subsequent scale changes are detected.
       if(GLFW3.fScaleMQL) {
         GLFW3.fScaleMQL.removeEventListener('change', GLFW3.onScaleChange);
       }
